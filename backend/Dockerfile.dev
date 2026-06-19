@@ -1,0 +1,21 @@
+# backend/Dockerfile.dev
+# Development image — nodemon for hot reload
+# NOT for production (use Dockerfile.prod in Phase 4)
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies first (cached unless package.json changes)
+COPY package*.json ./
+RUN npm install
+
+# Copy source (overridden by volume mount in docker-compose)
+COPY . .
+
+# Create uploads directory
+RUN mkdir -p uploads
+
+EXPOSE 5000
+
+CMD ["npm", "run", "dev"]
