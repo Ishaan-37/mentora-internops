@@ -1,6 +1,19 @@
-# Mentora – IIT Jammu InternOps Platform
-
+# Mentora – Internship Operations & Management Platform for IIT Jammu
 Mentora is an internship management platform built for IIT Jammu to streamline intern coordination, mentor supervision, assignment tracking, and academic progress monitoring.
+
+
+![Node.js](https://img.shields.io/badge/Node.js-Backend-green)
+
+![Express](https://img.shields.io/badge/Express.js-Framework-black)
+
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
+
+![JWT](https://img.shields.io/badge/JWT-Authentication-orange)
+
+![Docker](https://img.shields.io/badge/Docker-Containerization-2496ED)
+
+![IIT Jammu](https://img.shields.io/badge/IIT%20Jammu-Internship%20Platform-red)
+
 
 ## Problem Statement
 
