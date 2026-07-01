@@ -54,11 +54,68 @@ Mentora centralizes the entire workflow into a single platform.
 - Git
 - GitHub
 
-## Project Status
+## 🚀 Project Status
 
-Phase 1 Completed ✅
+> **Current Status:** Core Internship Management Platform Successfully Implemented
 
-### Completed APIs
+![Status](https://img.shields.io/badge/Status-Active%20Development-success)
+![Backend](https://img.shields.io/badge/Backend-Completed-brightgreen)
+![Frontend](https://img.shields.io/badge/Frontend-Completed-brightgreen)
+![Authentication](https://img.shields.io/badge/JWT-Implemented-orange)
+![Database](https://img.shields.io/badge/PostgreSQL-Integrated-blue)
+
+---
+
+## 📈 Development Progress
+
+| Module | Status |
+|---------|:------:|
+| 🔐 Authentication & Authorization | ✅ |
+| 🛡️ Role-Based Access Control (RBAC) | ✅ |
+| 👨‍💼 Admin Dashboard | ✅ |
+| 👨‍🏫 Professor Dashboard | ✅ |
+| 👨‍💻 Mentor Dashboard | ✅ |
+| 👨‍🎓 Intern Dashboard | ✅ |
+| 👥 User Management | ✅ |
+| 📦 Internship Batch Management | ✅ |
+| 🤝 Mentor Assignment Workflow | ✅ |
+| 📚 Internship Management | ✅ |
+| 📝 Assignment Creation | ✅ |
+| ⏰ Deadline Tracking | ✅ |
+| 📤 Submission Workflow | ✅ |
+| 🔔 Notification System | ✅ |
+| 🗄️ PostgreSQL Integration | ✅ |
+| 🌐 RESTful APIs | ✅ |
+| 📊 Analytics Dashboard | 🚧 |
+| 📈 Performance Reports | 🚧 |
+
+---
+
+## 🎯 Current Milestone
+
+✔️ Authentication & Authorization Completed
+
+✔️ Multi-Role Dashboards Implemented
+
+✔️ Internship Management Workflow Operational
+
+✔️ Assignment & Submission Pipeline Functional
+
+✔️ Mentor–Intern Assignment System Working
+
+✔️ Notification System Integrated
+
+🚧 Currently Developing Analytics & Reporting Module
+
+---
+
+## 📌 Overall Progress
+
+███████████████████░ 95%
+
+**Completed:** Core Platform
+
+**Remaining:** Analytics Dashboard & Performance Reports### Completed APIs
 
 - Health Check API
 - Login API
