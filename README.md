@@ -1,6 +1,5 @@
 # Mentora – Internship Operations & Management Platform for IIT Jammu
-Mentora is an internship management platform built for IIT Jammu to streamline intern coordination, mentor supervision, assignment tracking, and academic progress monitoring.
-
+Mentora (InternOps) is a full-stack internship operations platform built for IIT Jammu that digitizes the complete internship lifecycle through secure multi-role dashboards, mentor–intern collaboration, assignment and submission management, GPS-based attendance, notification services, and interactive analytics.
 
 ![Node.js](https://img.shields.io/badge/Node.js-Backend-green)
 
@@ -14,6 +13,18 @@ Mentora is an internship management platform built for IIT Jammu to streamline i
 
 ![IIT Jammu](https://img.shields.io/badge/IIT%20Jammu-Internship%20Platform-red)
 
+-------
+## ✨ Project Highlights
+
+- 📍 GPS-based Geo-Fenced Attendance
+- 👨‍🏫 Multi-Role Access Control
+- 📊 Interactive Analytics Dashboard
+- 🌙 Light & Dark Theme Support
+- 📈 Internship Progress Tracking
+- 🔔 Real-Time Notifications
+- 📝 Assignment & Submission Lifecycle
+- ⚡ RESTful API Architecture
+---------
 
 ## Problem Statement
 
@@ -23,36 +34,102 @@ Mentora centralizes the entire workflow into a single platform.
 
 ## Key Features
 
-- Admin Dashboard
-- Mentor Dashboard
-- Intern Dashboard
-- Internship Batch Management
-- Assignment Creation & Tracking
-- Deadline Monitoring
-- Submission Management
-- Weekly Reports
-- Presentation Scheduling
-- Notifications System
-- Role-Based Access Control (RBAC)
-- JWT Authentication
+- 🔐 Secure JWT Authentication
+- 🛡️ Role-Based Access Control (Admin, Professor, Mentor, Intern)
+- 👨‍💼 Multi-Role Dashboards
+- 👥 User & Batch Management
+- 🤝 Mentor–Intern Assignment System
+- 📝 Assignment, Task & Project Management
+- 📤 Submission Management with Deadline Tracking
+- 📍 Geo-Fenced Attendance System (GPS-based)
+- 🌙 Light / Dark Mode
+- 🔔 Real-Time Notification System
+- 📅 Internship Timeline
+- 📊 Interactive Progress Analytics
+- 📈 Submission Activity Visualization
+- ⚡ RESTful API Architecture
 
-## Tech Stack
+---------
+## 🛠️ Tech Stack
 
-### Backend
+### 🎨 Frontend
+
+- React.js
+- React Router DOM
+- Tailwind CSS
+- Axios
+- Recharts
+- React Context API
+- React Hooks
+
+---
+
+### ⚙️ Backend
 
 - Node.js
 - Express.js
-- PostgreSQL
-- JWT
+- JWT (JSON Web Tokens)
 - bcrypt
+- Multer
+- CORS
+- dotenv
+- UUID
+
+---
+
+### 🗄️ Database
+
+- PostgreSQL
+
+---
+
+### 🔐 Authentication & Security
+
+- JWT Authentication
+- Role-Based Access Control (RBAC)
+- Password Hashing (bcrypt)
+- Geo-Fenced GPS Attendance
+- Trusted Device Registration *(In Progress)*
+
+---
+
+### 📊 Visualization
+
+- Recharts
+- Interactive Progress Cards
+- Activity Charts
+- Dashboard Analytics
+
+---
+
+### 📍 Browser APIs
+
+- Geolocation API
+- Local Storage API
+
+---
+
+### 🐳 DevOps & Tools
+
 - Docker
-
-### Tools
-
-- Thunder Client
-- VS Code
 - Git
 - GitHub
+- VS Code
+- Thunder Client
+- pgAdmin 4
+
+---
+
+### 🌐 APIs
+
+- RESTful APIs
+
+---
+
+### 🚀 Deployment Ready
+
+- Docker Containerization
+- Environment Configuration (.env)
 
 ## 🚀 Project Status
 
@@ -77,41 +154,47 @@ Mentora centralizes the entire workflow into a single platform.
 | 👨‍💻 Mentor Dashboard | ✅ |
 | 👨‍🎓 Intern Dashboard | ✅ |
 | 👥 User Management | ✅ |
-| 📦 Internship Batch Management | ✅ |
-| 🤝 Mentor Assignment Workflow | ✅ |
-| 📚 Internship Management | ✅ |
-| 📝 Assignment Creation | ✅ |
-| ⏰ Deadline Tracking | ✅ |
+| 📦 Batch Management | ✅ |
+| 🤝 Mentor Assignment | ✅ |
+| 📝 Assignment Management | ✅ |
 | 📤 Submission Workflow | ✅ |
+| 📍 Geo-Fenced Attendance | ✅ |
+| 🌙 Light / Dark Theme | ✅ |
 | 🔔 Notification System | ✅ |
-| 🗄️ PostgreSQL Integration | ✅ |
-| 🌐 RESTful APIs | ✅ |
-| 📊 Analytics Dashboard | 🚧 |
+| 📅 Internship Timeline | ✅ |
+| 📊 Progress Dashboard | ✅ |
+| 📈 Submission Analytics | ✅ |
+| 📊 Professor Analytics | 🚧 |
 | 📈 Performance Reports | 🚧 |
 
 ---
 
 ## 🎯 Current Milestone
 
-✔️ Authentication & Authorization Completed
+✔️ Secure Multi-Role Authentication
 
-✔️ Multi-Role Dashboards Implemented
+✔️ Admin / Professor / Mentor / Intern Dashboards
 
-✔️ Internship Management Workflow Operational
+✔️ Complete Internship Workflow
 
-✔️ Assignment & Submission Pipeline Functional
+✔️ Mentor Assignment System
 
-✔️ Mentor–Intern Assignment System Working
+✔️ Assignment & Submission Pipeline
 
-✔️ Notification System Integrated
+✔️ GPS-Based Geo-Fenced Attendance
 
-🚧 Currently Developing Analytics & Reporting Module
+✔️ Light / Dark Theme
 
+✔️ Interactive Dashboard Analytics
+
+✔️ Notification System
+
+🚧 Building Professor Analytics & AI Performance Insights
 ---
 
 ## 📌 Overall Progress
 
-███████████████████░ 95%
+██████████████████████░░ 98%
 
 **Completed:** Core Platform
 
