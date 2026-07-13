@@ -1,5 +1,5 @@
 # Helix – Internship Operations & Management Platform for IIT Jammu
-Mentora (InternOps) is a full-stack internship operations platform built for IIT Jammu that digitizes the complete internship lifecycle through secure multi-role dashboards, mentor–intern collaboration, assignment and submission management, GPS-based attendance, notification services, and interactive analytics.
+Helix (InternOps) is a full-stack internship operations platform built for IIT Jammu that digitizes the complete internship lifecycle through secure multi-role dashboards, mentor–intern collaboration, assignment and submission management, GPS-based attendance, notification services, and interactive analytics.
 
 ![Node.js](https://img.shields.io/badge/Node.js-Backend-green)
 
