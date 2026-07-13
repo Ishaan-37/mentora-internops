@@ -55,7 +55,8 @@ const setAuthCookies = (res, accessToken, refreshToken) => {
 // ------------------------------------------------------------------
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, deviceHash, deviceLabel } = req.body;
+    console.log('EMAIL:', email);
 
     // 1. Find user by email
     const { rows } = await db.query(
@@ -73,6 +74,8 @@ const login = async (req, res) => {
     }
 
     const user = rows[0];
+    console.log('DB EMAIL:', user.email);
+console.log('HASH:', user.password_hash);
 
     // 2. Check if account is active
     if (!user.is_active) {
@@ -84,12 +87,60 @@ const login = async (req, res) => {
 
     // 3. Compare password with stored hash
     const passwordMatch = await bcrypt.compare(password, user.password_hash);
+    console.log('PASSWORD MATCH:', passwordMatch);
     if (!passwordMatch) {
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password.',
       });
     }
+    // =======================
+    // ADD DEVICE CHECK HERE
+    // =======================
+    if (user.role === 'intern') {
+    const { rows: deviceRows } = await db.query(
+        `SELECT device_hash
+         FROM intern_devices
+         WHERE intern_id = $1
+         AND is_active = TRUE`,
+      [user.id]
+    );
+    // Check if this device is already registered to another intern
+    const { rows: existingDevice } = await db.query(
+      `SELECT intern_id
+      FROM intern_devices
+      WHERE device_hash = $1
+      AND is_active = TRUE`,
+      [deviceHash]
+    );
+    if (
+      existingDevice.length > 0 &&
+      existingDevice[0].intern_id !== user.id
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: "This device is already registered to another intern."
+      });
+    }
+
+    if (deviceRows.length === 0) {
+      // First login → register device
+      await db.query(
+        `INSERT INTO intern_devices
+        (intern_id, device_hash, device_label)
+        VALUES ($1, $2, $3)`,
+        [user.id, deviceHash, deviceLabel]
+      );
+  } else {
+    const registeredDevice = deviceRows[0].device_hash;
+     if (registeredDevice !== deviceHash) {
+        return res.status(403).json({
+            success: false,
+            message: "This account is already registered on another device."
+        });
+    }
+}
+} // <-- ADD THIS ONLY if you added: if (user.role === 'intern') {
 
     // 4. Update last login timestamp
     await db.query(

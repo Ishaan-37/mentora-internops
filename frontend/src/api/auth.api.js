@@ -1,8 +1,8 @@
 // src/api/auth.api.js
 import api from './axios';
 
-export const login = (email, password) =>
-  api.post('/auth/login', { email, password }).then((res) => res.data);
+export const login = (email, password, deviceHash, deviceLabel ) =>
+  api.post('/auth/login', { email, password, deviceHash, deviceLabel}).then((res) => res.data);
 
 export const logout = () =>
   api.post('/auth/logout').then((res) => res.data);

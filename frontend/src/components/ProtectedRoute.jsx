@@ -7,9 +7,10 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 const ROLE_REDIRECTS = {
-  admin:  '/admin/dashboard',
-  mentor: '/mentor/dashboard',
-  intern: '/intern/dashboard',
+  admin:     '/admin/dashboard',
+  professor: '/professor/dashboard',
+  mentor:    '/mentor/dashboard',
+  intern:    '/intern/dashboard',
 };
 
 export default function ProtectedRoute({ allowedRoles }) {
@@ -22,6 +23,11 @@ export default function ProtectedRoute({ allowedRoles }) {
       </div>
     );
   }
+  
+  console.log('ProtectedRoute user =', user);
+  console.log('ProtectedRoute loading =', loading);
+  console.log('allowedRoles =', allowedRoles);
+  console.log('CURRENT PATH =',window.location.pathname);
 
   if (!user) return <Navigate to="/login" replace />;
 

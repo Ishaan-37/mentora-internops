@@ -27,3 +27,6 @@ export const createBatch = (payload) =>
 
 export const deleteUser = (id) =>
   api.delete(`/admin/delete-user/${id}`).then((res) => res.data);
+
+export const getAssignments = () =>
+  api.get('/admin/assignments').then((res) => res.data);

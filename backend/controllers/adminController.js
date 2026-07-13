@@ -65,15 +65,16 @@ const addAdmin = async (req, res) => {
 
 // ------------------------------------------------------------------
 // POST /api/admin/add-mentor
-// Body: { name, email, password, mentorRole }
+// Body: { name, email, password, mentorRole, professorId }
 //   mentorRole: 'research_scholar' | 'student'
+//   professorId: professors.id (optional — links scholar to a professor)
 // ------------------------------------------------------------------
 const addMentor = async (req, res) => {
   const client = await db.getClient();
   try {
     await client.query('BEGIN');
 
-    const { name, email, password, mentorRole = 'research_scholar' } = req.body;
+    const { name, email, password, mentorRole = 'research_scholar', professorId } = req.body;
 
     const { rows: existing } = await client.query(
       'SELECT id FROM users WHERE email = LOWER($1)',
@@ -82,6 +83,18 @@ const addMentor = async (req, res) => {
     if (existing.length) {
       await client.query('ROLLBACK');
       return res.status(409).json({ success: false, message: 'Email already in use.' });
+    }
+
+    // Validate professor exists, if one was supplied
+    if (professorId) {
+      const { rows: professorCheck } = await client.query(
+        'SELECT id FROM professors WHERE id = $1',
+        [professorId]
+      );
+      if (!professorCheck.length) {
+        await client.query('ROLLBACK');
+        return res.status(404).json({ success: false, message: 'Professor not found.' });
+      }
     }
 
     const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS());
@@ -93,13 +106,24 @@ const addMentor = async (req, res) => {
       [name.trim(), email.trim(), passwordHash]
     );
 
-    await client.query(
-      `INSERT INTO mentors (user_id, mentor_role) VALUES ($1, $2)`,
+    const { rows: [mentor] } = await client.query(
+      `INSERT INTO mentors (user_id, mentor_role)
+       VALUES ($1, $2)
+       RETURNING id`,
       [user.id, mentorRole]
     );
 
+    // Link this research scholar to their professor, if provided
+    if (professorId) {
+      await client.query(
+        `INSERT INTO professor_research_scholars (professor_id, mentor_id)
+         VALUES ($1, $2)`,
+        [professorId, mentor.id]
+      );
+    }
+
     await client.query('COMMIT');
-    logger.info('Mentor created', { by: req.user.id, mentorId: user.id });
+    logger.info('Mentor created', { by: req.user.id, mentorId: user.id, professorId: professorId || null });
 
     return res.status(201).json({
       success: true,
@@ -229,20 +253,44 @@ const assignMentor = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Mentor not found.' });
     }
 
-    // Upsert the mentor_interns link
+    // Remove any existing mentor link for this intern (one intern = one mentor at a time)
     await client.query(
-      `INSERT INTO mentors_interns (mentor_id, intern_id)
-       VALUES ($1, $2)
-       ON CONFLICT (mentor_id, intern_id) DO NOTHING`,
+      `DELETE FROM mentors_interns WHERE intern_id = $1`,
+      [internId]
+    );
+
+    // Insert the new mentor link
+    await client.query(
+      `INSERT INTO mentors_interns (mentor_id, intern_id) VALUES ($1, $2)`,
       [mentorId, internId]
     );
 
-    // Update internship record's mentor_id
-    await client.query(
-      `UPDATE internships SET mentor_id = $1, updated_at = NOW()
-       WHERE intern_id = $2 AND status = 'active'`,
-      [mentorId, internId]
+    // Update internships record if it exists, or create one if it doesn't
+    // (intern may have been created without going through addIntern)
+    const { rows: existingInternship } = await client.query(
+      `SELECT id FROM internships WHERE intern_id = $1 AND status = 'active'`,
+      [internId]
     );
+
+    if (existingInternship.length) {
+      await client.query(
+        `UPDATE internships SET mentor_id = $1, updated_at = NOW()
+         WHERE intern_id = $2 AND status = 'active'`,
+        [mentorId, internId]
+      );
+    } else {
+      // Get the most recent batch as a fallback
+      const { rows: batchRows } = await client.query(
+        `SELECT id, start_date, end_date FROM batches ORDER BY created_at DESC LIMIT 1`
+      );
+      if (batchRows.length) {
+        await client.query(
+          `INSERT INTO internships (intern_id, batch_id, mentor_id, start_date, end_date, status)
+           VALUES ($1, $2, $3, $4, $5, 'active')`,
+          [internId, batchRows[0].id, mentorId, batchRows[0].start_date, batchRows[0].end_date]
+        );
+      }
+    }
 
     await client.query('COMMIT');
     logger.info('Mentor reassigned', { by: req.user.id, internId, mentorId });
@@ -300,7 +348,7 @@ const createBatch = async (req, res) => {
 const getAllUsers = async (req, res) => {
   try {
     const { role } = req.query;
-    const validRoles = ['admin', 'mentor', 'intern'];
+    const validRoles = ['admin', 'professor', 'mentor', 'intern'];
 
     let queryText = `
       SELECT u.id, u.name, u.email, u.role, u.is_active, u.created_at, u.last_login_at
@@ -475,11 +523,49 @@ const getDashboard = async (req, res) => {
   }
 };
 
+// ------------------------------------------------------------------
+// GET /api/admin/assignments
+// Returns current intern → mentor → professor mapping for the
+// Assign tab confirmation table
+// ------------------------------------------------------------------
+const getAssignments = async (req, res) => {
+  try {
+    const { rows } = await db.query(
+      `SELECT
+         u_intern.id          AS intern_id,
+         u_intern.name        AS intern_name,
+         u_intern.email       AS intern_email,
+         COALESCE(b.name, '—')  AS batch_name,
+         u_mentor.id          AS mentor_id,
+         u_mentor.name        AS mentor_name,
+         COALESCE(u_prof.name, '—') AS professor_name,
+         COALESCE(i.status, 'active') AS internship_status
+       FROM   mentors_interns mi
+       JOIN   users u_intern ON u_intern.id = mi.intern_id
+       JOIN   users u_mentor ON u_mentor.id = mi.mentor_id
+       LEFT JOIN internships i   ON i.intern_id = mi.intern_id AND i.status = 'active'
+       LEFT JOIN batches b       ON b.id = i.batch_id
+       LEFT JOIN mentors m       ON m.user_id = mi.mentor_id
+       LEFT JOIN professor_research_scholars prs ON prs.research_scholar_id = m.id
+       LEFT JOIN professors p    ON p.id = prs.professor_id
+       LEFT JOIN users u_prof    ON u_prof.id = p.user_id
+       WHERE  u_intern.is_active = TRUE
+       ORDER  BY u_intern.name ASC`
+    );
+
+    return res.status(200).json({ success: true, data: { assignments: rows } });
+  } catch (err) {
+    logger.error('getAssignments error', { error: err.message });
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+};
+
 module.exports = {
   addAdmin,
   addMentor,
   addIntern,
   assignMentor,
+  getAssignments,
   createBatch,
   getAllUsers,
   getAllBatches,

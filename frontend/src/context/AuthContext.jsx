@@ -21,8 +21,8 @@ export const AuthProvider = ({ children }) => {
       .finally(() => setLoading(false));
   }, []);
 
-  const login = useCallback(async (email, password) => {
-    const res = await authApi.login(email, password);
+  const login = useCallback(async (email, password, deviceHash, deviceLabel) => {
+    const res = await authApi.login(email, password,deviceHash,deviceLabel);
     setUser(res.data.user);
     return res.data.user;
   }, []);

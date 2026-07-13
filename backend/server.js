@@ -18,8 +18,12 @@ const logger              = require('./config/logger');
 const { sanitizeBody }    = require('./middleware/validate');
 
 // Route modules
-const authRoutes  = require('./routes/auth');
-const adminRoutes = require('./routes/admin');
+const authRoutes      = require('./routes/auth');
+const adminRoutes     = require('./routes/admin');
+const mentorRoutes    = require('./routes/mentor');
+const internRoutes    = require('./routes/intern');
+const professorRoutes = require('./routes/professorRoutes');
+const attendanceRoutes = require('./routes/attendanceRoutes');
 
 // ------------------------------------------------------------------
 // App instance
@@ -136,13 +140,15 @@ app.get('/api/health', async (req, res) => {
 // ------------------------------------------------------------------
 // API Routes
 // ------------------------------------------------------------------
-app.use('/api/auth',  authRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/api/auth',      authRoutes);
+app.use('/api/admin',     adminRoutes);
+app.use('/api/mentor',    mentorRoutes);
+app.use('/api/intern',    internRoutes);
+app.use('/api/professors', professorRoutes);
+app.use('/api/attendance', attendanceRoutes);
 
-// Phase 2 routes (added in next phase)
-// app.use('/api/mentor', mentorRoutes);
-// app.use('/api/intern', internRoutes);
-// app.use('/api/upload', uploadRoutes);
+// Phase 3 routes (added in next phase)
+// app.use('/api/notifications', notificationRoutes);
 
 // ------------------------------------------------------------------
 // 404 handler — catches unmatched routes

@@ -2,11 +2,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { getDeviceFingerprint } from '../utils/deviceFingerprint';
 
 const ROLE_REDIRECTS = {
   admin:  '/admin/dashboard',
   mentor: '/mentor/dashboard',
   intern: '/intern/dashboard',
+  professor: '/professor/dashboard',
 };
 
 export default function Login() {
@@ -23,8 +25,15 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      const user = await login(email, password);
-      navigate(ROLE_REDIRECTS[user.role] || '/login');
+      const fingerprint = getDeviceFingerprint();
+      const user = await login(email,  password,  fingerprint.deviceHash,  fingerprint.deviceLabel);
+      console.log('LOGIN USER =', user);
+      console.log('ROLE =', user.role);
+      const target = ROLE_REDIRECTS[user.role] || '/login';
+      console.log('REDIRECT =', target);
+      console.log('BEFORE NAVIGATE');
+      navigate(target);
+      console.log('AFTER NAVIGATE');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
@@ -35,16 +44,23 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4">
       <div className="w-full max-w-sm">
-        <div className="flex items-center justify-center gap-2.5 mb-8">
-          <div className="w-10 h-10 rounded-lg bg-accent-500 flex items-center justify-center">
-            <i className="ti ti-bolt text-white text-xl" aria-hidden="true" />
-          </div>
-          <span className="font-display font-semibold text-white text-2xl">InternOps</span>
-        </div>
+        <div className="flex flex-col items-center justify-center mb-8">
+          <img
+            src="/iit-jammu-logo.png"
+            alt="Indian Institute of Technology Jammu"
+            className="h-60 w-auto mb-3"
+          />
+          <span className="font-display font-semibold text-white text-xl tracking-tight">
+            
+        </span>
+      <span className="text-slate-400 text-xs mt-0.5">
+        RISE-UP Internship Program
+        </span>
+      </div>
 
         <div className="bg-white rounded-xl shadow-xl p-8">
           <h1 className="font-display font-semibold text-xl text-gray-900 mb-1">Welcome back</h1>
-          <p className="text-sm text-gray-500 mb-6">Sign in to your IIT Jammu RISE account</p>
+          <p className="text-sm text-gray-500 mb-6">Sign in to your IIT Jammu RISE-UP account</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -85,8 +101,8 @@ export default function Login() {
           </form>
         </div>
 
-        <p className="text-center text-xs text-slate-500 mt-6">
-          IIT Jammu · RISE Internship Program
+        <p className="text-center text-xs text-slate-600 mt-6">
+          © {new Date().getFullYear()} Indian Institute of Technology Jammu
         </p>
       </div>
     </div>

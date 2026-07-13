@@ -16,6 +16,9 @@ import MentorDashboard from './pages/mentor/MentorDashboard';
 import InternDetail from './pages/mentor/InternDetail';
 import Directory from './pages/mentor/Directory';
 import ReviewSubmission from './pages/mentor/ReviewSubmission';
+import ProfessorLayout from './layouts/ProfessorLayout';
+import ProfessorDashboard from './pages/professor/ProfessorDashboard';
+import MentorAttendance from './pages/mentor/MentorAttendance';
 
 import InternDashboard from './pages/intern/InternDashboard';
 import WorkItems from './pages/intern/WorkItems';
@@ -23,6 +26,7 @@ import WorkItemDetail from './pages/intern/WorkItemDetail';
 import Timeline from './pages/intern/Timeline';
 import Cohort from './pages/intern/Cohort';
 import Notifications from './pages/intern/Notifications';
+import Attendance from './pages/intern/Attendance';
 
 export default function App() {
   return (
@@ -44,8 +48,16 @@ export default function App() {
           <Route path="/mentor/dashboard" element={<MentorDashboard />} />
           <Route path="/mentor/interns" element={<MentorDashboard />} />
           <Route path="/mentor/interns/:id" element={<InternDetail />} />
+          <Route path="/mentor/attendance" element={<MentorAttendance />} />
           <Route path="/mentor/directory" element={<Directory />} />
           <Route path="/mentor/submissions" element={<ReviewSubmission />} />
+        </Route>
+      </Route>
+      {/* Professor routes */}
+
+      <Route element={<ProtectedRoute allowedRoles={['professor']} />}>
+        <Route element={<ProfessorLayout />}>
+          <Route path="/professor/dashboard"element={<ProfessorDashboard />} />
         </Route>
       </Route>
 
@@ -56,6 +68,7 @@ export default function App() {
           <Route path="/intern/work-items" element={<WorkItems />} />
           <Route path="/intern/work-items/:id" element={<WorkItemDetail />} />
           <Route path="/intern/timeline" element={<Timeline />} />
+          <Route path="/intern/attendance" element={<Attendance />} />
           <Route path="/intern/cohort" element={<Cohort />} />
           <Route path="/intern/notifications" element={<Notifications />} />
         </Route>

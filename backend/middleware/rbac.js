@@ -22,16 +22,20 @@ const requireRole = (roles) => (req, res, next) => {
   next();
 };
 
-// Convenience wrappers for the three user tiers
-const requireAdmin  = requireRole(['admin']);
-const requireMentor = requireRole(['mentor']);
-const requireIntern = requireRole(['intern']);
+// Convenience wrappers for the user tiers
+const requireAdmin     = requireRole(['admin']);
+const requireProfessor = requireRole(['professor']);
+const requireMentor    = requireRole(['mentor']);
+const requireIntern    = requireRole(['intern']);
+
+// Admin or Professor can access (e.g. Professor-management routes)
+const requireAdminOrProfessor = requireRole(['admin', 'professor']);
 
 // Admin or Mentor can access (e.g. reviewing submissions)
 const requireAdminOrMentor = requireRole(['admin', 'mentor']);
 
 // Any authenticated user
-const requireAnyRole = requireRole(['admin', 'mentor', 'intern']);
+const requireAnyRole = requireRole(['admin', 'professor', 'mentor', 'intern']);
 
 // ------------------------------------------------------------------
 // requireSelfOrAdmin
@@ -61,8 +65,10 @@ const requireSelfOrAdmin = (req, res, next) => {
 module.exports = {
   requireRole,
   requireAdmin,
+  requireProfessor,
   requireMentor,
   requireIntern,
+  requireAdminOrProfessor,
   requireAdminOrMentor,
   requireAnyRole,
   requireSelfOrAdmin,
